@@ -34,6 +34,9 @@
 |定位	|HTML5 Geolocation API + Google Maps API (optional)|
 
 # 🧱 資料表設計（簡化版）
+https://dbdiagram.io/d/打卡數位轉型-6888451acca18e685c295815
+<img width="790" height="697" alt="image" src="https://github.com/user-attachments/assets/04d807d4-1c64-4d97-a627-170f85071435" />
+
 ```
 Table Employees {
   id INT [pk]
