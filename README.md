@@ -69,16 +69,23 @@ Table LeaveRequests {
 ```
 # 📁 專案結構
 ```
-src/
-└── main/
-├── java/com/example/attendance/
-│ ├── controller/
-│ ├── service/
-│ ├── model/
-│ ├── repository/
-│ └── AttendanceApplication.java
-└── resources/
-└── application.yml
+Attendnece_system/
+ ├─── backend/
+ │    └──src/
+ │       └── main/
+ │           ├─── java/com/Shen/attendance/
+ │           │   ├── controller/
+ │           │   ├── service/
+ │           │   ├── model/
+ │           │   ├── Dao/
+ │           │   └── AttendanceApplication.java
+ │           └── resources/
+ └───frontend/
+     ├──public/
+     ├──src/
+     │  ├── assets/
+     │  └── components/
+     └── index.html
 ```
 ## 🛠️ 如何啟動
 
