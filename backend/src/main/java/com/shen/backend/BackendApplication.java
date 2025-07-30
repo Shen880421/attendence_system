@@ -1,13 +1,13 @@
-package com.shen.attendence;
+package com.shen.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AttendenceApplication {
+public class BackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AttendenceApplication.class, args);
+		SpringApplication.run(BackendApplication.class, args);
 	}
 
 }

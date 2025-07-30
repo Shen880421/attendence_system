@@ -1,10 +1,10 @@
-package com.shen.attendence;
+package com.shen.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AttendenceApplicationTests {
+class BackendApplicationTests {
 
 	@Test
 	void contextLoads() {
