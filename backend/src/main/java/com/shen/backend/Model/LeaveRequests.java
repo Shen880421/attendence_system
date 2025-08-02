@@ -23,11 +23,11 @@ public class LeaveRequests {
     private RequestStatus status;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
+    @Column(name = "leave_created_at")
     private Date createdAt;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at")
+    @Column(name = "leave_updated_at")
     private Date updatedAt;
 
     @PrePersist

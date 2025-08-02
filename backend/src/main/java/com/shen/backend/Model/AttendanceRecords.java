@@ -18,6 +18,7 @@ public class AttendanceRecords {
     private AttendanceType type;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "attendance_timestamp")
     private Date timestamp;
 
     private String location;

@@ -17,7 +17,7 @@ public class Employees {
     private Role role;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_at")
+    @Column(name = "employee_created_at")
     private Date createAt;
 
     @PrePersist
