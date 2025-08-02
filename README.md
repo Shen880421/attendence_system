@@ -135,10 +135,7 @@ create database attendance_system;
 
 # 📌 API 文件
 
-請見 docs/api-spec.md 或 Swagger UI（啟動後：http://localhost:8080/swagger-ui.html）
 Postman 測試檔 AttendanceSystem.postman_collection.json
-
-# 📄 API 設計文件（`docs/api-spec.md`）
 
 ## 📄 Attendance System API 文件
 
