@@ -1,89 +1,362 @@
 {
-  "info": {
-    "name": "Attendance System API",
-    "_postman_id": "1b793264-4f7f-4c4c-b30b-bc0d0d66c841",
-    "description": "Spring Boot Attendance 打卡系統測試",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "item": [
-    {
-      "name": "登入",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "url": {
-          "raw": "http://localhost:8080/api/auth/login",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8080",
-          "path": ["api", "auth", "login"]
-        },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"123456\"\n}"
-        }
-      }
+    "info": {
+        "name": "Attendance System API",
+        "_postman_id": "1b793264-4f7f-4c4c-b30b-bc0d0d66c841",
+        "description": "Spring Boot Attendance 打卡系統 - 完整API測試集合",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
-    {
-      "name": "打卡",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          },
-          {
-            "key": "Authorization",
-            "value": "Bearer {{JWT}}"
-          }
-        ],
-        "url": {
-          "raw": "http://localhost:8080/api/attendance/clock",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8080",
-          "path": ["api", "attendance", "clock"]
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8080",
+            "type": "string"
         },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"type\": \"clock_in\",\n  \"location\": \"25.034,121.564\"\n}"
+        {
+            "key": "jwt_token",
+            "value": "",
+            "type": "string"
         }
-      }
-    },
-    {
-      "name": "查詢出勤紀錄",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{JWT}}"
-          }
-        ],
-        "url": {
-          "raw": "http://localhost:8080/api/attendance/history?start=2025-07-01&end=2025-07-31",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8080",
-          "path": ["api", "attendance", "history"],
-          "query": [
-            {
-              "key": "start",
-              "value": "2025-07-01"
-            },
-            {
-              "key": "end",
-              "value": "2025-07-31"
-            }
-          ]
+    ],
+    "item": [
+        {
+            "name": "員工管理",
+            "item": [
+                {
+                    "name": "創建用戶",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/employees/createuser",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "employees", "createuser"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"123456\",\n  \"role\": \"USER\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "用戶登入",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.status === 'OK') {",
+                                    "    const responseJson = pm.response.json();",
+                                    "    pm.collectionVariables.set('jwt_token', responseJson.token);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/employees/login",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "employees", "login"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"123456\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "獲取所有員工",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/employees/getall",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "employees", "getall"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "出勤管理",
+            "item": [
+                {
+                    "name": "上班打卡",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/attendance/checkin",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "attendance", "checkin"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"location\": \"台北市信義區信義路五段7號\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "下班打卡",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/attendance/checkout",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "attendance", "checkout"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"location\": \"台北市信義區信義路五段7號\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "獲取所有出勤記錄",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/attendance/getall",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "attendance", "getall"]
+                        }
+                    }
+                },
+                {
+                    "name": "創建出勤記錄",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/attendance/create",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "attendance", "create"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"employee\": {\n    \"id\": 1\n  },\n  \"attendanceType\": \"CHECK_IN\",\n  \"location\": \"台北市信義區信義路五段7號\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "查詢特定出勤記錄",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/attendance/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "attendance", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "更新出勤記錄",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/attendance/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "attendance", "1"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"attendanceType\": \"CHECK_OUT\",\n  \"location\": \"台北市信義區信義路五段7號\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "刪除出勤記錄",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/attendance/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "attendance", "1"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "請假管理",
+            "item": [
+                {
+                    "name": "獲取所有請假申請",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/leaverequests/getall",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "leaverequests", "getall"]
+                        }
+                    }
+                },
+                {
+                    "name": "創建請假申請",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/leaverequests/create",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "leaverequests", "create"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"employee\": {\n    \"id\": 1\n  },\n  \"leaveType\": \"SICK\",\n  \"startDate\": \"2025-08-10\",\n  \"endDate\": \"2025-08-12\",\n  \"reason\": \"感冒休息\",\n  \"status\": \"PENDING\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "查詢特定請假申請",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/leaverequests/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "leaverequests", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "更新請假申請",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/leaverequests/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "leaverequests", "1"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"leaveType\": \"SICK\",\n  \"startDate\": \"2025-08-10\",\n  \"endDate\": \"2025-08-13\",\n  \"reason\": \"感冒休息 - 延長一天\",\n  \"status\": \"APPROVED\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "刪除請假申請",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/leaverequests/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "leaverequests", "1"]
+                        }
+                    }
+                }
+            ]
         }
-      }
-    }
-  ]
+    ]
 }
