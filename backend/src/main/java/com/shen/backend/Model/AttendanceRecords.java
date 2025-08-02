@@ -1,13 +1,6 @@
 package com.shen.backend.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.EnumType;
+import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -23,8 +16,18 @@ public class AttendanceRecords {
 
     @Enumerated(EnumType.STRING)
     private AttendanceType type;
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Date timestamp;
+
     private String location;
+
+    @PrePersist
+    protected void onCreate() {
+        if (timestamp == null) {
+            timestamp = new Date();
+        }
+    }
 
     public AttendanceRecords() {
     }

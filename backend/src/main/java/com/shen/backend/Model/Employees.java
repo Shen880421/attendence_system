@@ -1,16 +1,10 @@
 package com.shen.backend.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
 public class Employees {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,23 +16,48 @@ public class Employees {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private Date created_at;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_at")
+    private Date createAt;
 
+    @PrePersist
+    protected void onCreate() {
+        createAt = new Date();
+    }
+
+    // 建構子
     public Employees() {
     }
 
-    public Employees(String name, String email, String password, Role role, Date created_at) {
+    public Employees(String name, String email, String password, Role role) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
     }
 
+    // Getter 和 Setter
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public Date getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
+    }
+
     public Long getId() {
         return id;
     }
 
-    public void setMid(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -64,14 +83,6 @@ public class Employees {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Date getCreateAt() {
-        return created_at;
-    }
-
-    public void setCreateAt(Date created_at) {
-        this.created_at = created_at;
     }
 
 }
