@@ -1,9 +1,10 @@
 package com.shen.backend.controller;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
-import com.shen.backend.Dao.EmployeesRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import com.shen.backend.Model.Employees;
+import com.shen.backend.service.EmployeeService;
 
 import java.util.List;
 
@@ -11,14 +12,22 @@ import java.util.List;
 @RequestMapping("api/employees")
 public class EmployeesController {
     @Autowired
-    private EmployeesRepository employeesRepository;
+    private EmployeeService employeeService;
+
     @GetMapping("getall")
     public List<Employees> getAllEmployees() {
-        return employeesRepository.findAll();
+        return employeeService.findAll();
     }
+
     @PostMapping("createuser")
-    public Employees createUser(@RequestBody Employees employee) {
-        return employeesRepository.save(employee);
+    public ResponseEntity<Employees> createUser(@RequestBody Employees employee) {
+        try {
+            System.out.println("Received employee: " + employee.getName() + ", Role: " + employee.getRole());
+            Employees savedEmployee = employeeService.save(employee);
+            return ResponseEntity.ok(savedEmployee);
+        } catch (Exception e) {
+            e.printStackTrace(); // 這會在控制台顯示詳細錯誤
+            return ResponseEntity.badRequest().build();
+        }
     }
-    
 }

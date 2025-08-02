@@ -1,43 +1,64 @@
 package com.shen.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.shen.backend.Dao.AttendanceRecordsRepository;
 import com.shen.backend.Model.AttendanceRecords;
+import com.shen.backend.service.AttendanceRecordsService;
+
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/attendance")
 public class AttendanceRecordsController {
 
     @Autowired
-    private AttendanceRecordsRepository attendanceRecordsRepository;
+    private AttendanceRecordsService attendanceRecordsService;
 
-    @GetMapping
+    @GetMapping("getall")
     public List<AttendanceRecords> getAllAttendanceRecords() {
-        return attendanceRecordsRepository.findAll();
+        return attendanceRecordsService.findAll();
     }
 
-    @PostMapping
-    public AttendanceRecords createAttendanceRecord(@RequestBody AttendanceRecords attendanceRecord) {
-        return attendanceRecordsRepository.save(attendanceRecord);
+    @PostMapping("create")
+    public ResponseEntity<AttendanceRecords> createAttendanceRecord(@RequestBody AttendanceRecords attendanceRecord) {
+        try {
+            AttendanceRecords savedRecord = attendanceRecordsService.save(attendanceRecord);
+            return ResponseEntity.ok(savedRecord);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping("/{id}")
-    public AttendanceRecords getAttendanceRecordById(@PathVariable Long id) {
-        return attendanceRecordsRepository.findById(id).orElse(null);
+    public ResponseEntity<AttendanceRecords> getAttendanceRecordById(@PathVariable Long id) {
+        Optional<AttendanceRecords> record = attendanceRecordsService.findById(id);
+        return record.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
-    public AttendanceRecords updateAttendanceRecord(@PathVariable Long id,
+    public ResponseEntity<AttendanceRecords> updateAttendanceRecord(@PathVariable Long id,
             @RequestBody AttendanceRecords attendanceRecord) {
-        attendanceRecord.setId(id);
-        return attendanceRecordsRepository.save(attendanceRecord);
+        try {
+            attendanceRecord.setId(id);
+            AttendanceRecords updatedRecord = attendanceRecordsService.save(attendanceRecord);
+            return ResponseEntity.ok(updatedRecord);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void deleteAttendanceRecord(@PathVariable Long id) {
-        attendanceRecordsRepository.deleteById(id);
+    public ResponseEntity<Void> deleteAttendanceRecord(@PathVariable Long id) {
+        try {
+            attendanceRecordsService.deleteById(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

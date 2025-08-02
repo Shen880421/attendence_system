@@ -1,43 +1,64 @@
 package com.shen.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.shen.backend.Dao.LeaveRequestsRepository;
 import com.shen.backend.Model.LeaveRequests;
+import com.shen.backend.service.LeaveRequestsService;
+
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/leaverequests")
 public class LeaveRequestsController {
 
     @Autowired
-    private LeaveRequestsRepository leaveRequestsRepository;
+    private LeaveRequestsService leaveRequestsService;
 
-    @GetMapping
+    @GetMapping("getall")
     public List<LeaveRequests> getAllLeaveRequests() {
-        return leaveRequestsRepository.findAll();
+        return leaveRequestsService.findAll();
     }
 
-    @PostMapping
-    public LeaveRequests createLeaveRequest(@RequestBody LeaveRequests leaveRequest) {
-        return leaveRequestsRepository.save(leaveRequest);
+    @PostMapping("create")
+    public ResponseEntity<LeaveRequests> createLeaveRequest(@RequestBody LeaveRequests leaveRequest) {
+        try {
+            LeaveRequests savedRequest = leaveRequestsService.save(leaveRequest);
+            return ResponseEntity.ok(savedRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping("/{id}")
-    public LeaveRequests getLeaveRequestById(@PathVariable Long id) {
-        return leaveRequestsRepository.findById(id).orElse(null);
+    public ResponseEntity<LeaveRequests> getLeaveRequestById(@PathVariable Long id) {
+        Optional<LeaveRequests> request = leaveRequestsService.findById(id);
+        return request.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
-    public LeaveRequests updateLeaveRequest(@PathVariable Long id,
+    public ResponseEntity<LeaveRequests> updateLeaveRequest(@PathVariable Long id,
             @RequestBody LeaveRequests leaveRequest) {
-        leaveRequest.setId(id);
-        return leaveRequestsRepository.save(leaveRequest);
+        try {
+            leaveRequest.setId(id);
+            LeaveRequests updatedRequest = leaveRequestsService.save(leaveRequest);
+            return ResponseEntity.ok(updatedRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void deleteLeaveRequest(@PathVariable Long id) {
-        leaveRequestsRepository.deleteById(id);
+    public ResponseEntity<Void> deleteLeaveRequest(@PathVariable Long id) {
+        try {
+            leaveRequestsService.deleteById(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
