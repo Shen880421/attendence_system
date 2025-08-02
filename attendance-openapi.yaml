@@ -1,0 +1,336 @@
+openapi: 3.0.0
+info:
+    title: Attendance System API
+    version: 1.0.0
+    description: Spring Boot Attendance 打卡系統 - 完整 API 文件
+servers:
+    - url: http://localhost:8080
+
+tags:
+    - name: Auth
+      description: 登入與註冊
+    - name: Employees
+      description: 員工管理
+    - name: Attendance
+      description: 打卡紀錄
+    - name: LeaveRequests
+      description: 請假申請
+
+components:
+    securitySchemes:
+        bearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+
+    schemas:
+        JwtResponse:
+            type: object
+            properties:
+                token:
+                    type: string
+                type:
+                    type: string
+                    example: Bearer
+                username:
+                    type: string
+
+        CreateUser:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+                role:
+                    type: string
+                    enum: [employee, admin]
+            required: [username, password, role]
+
+        LoginRequest:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+            required: [username, password]
+
+        AttendanceRecord:
+            type: object
+            properties:
+                checkinTime:
+                    type: string
+                    format: date-time
+                checkoutTime:
+                    type: string
+                    format: date-time
+
+        LeaveRequest:
+            type: object
+            properties:
+                startDate:
+                    type: string
+                    format: date
+                endDate:
+                    type: string
+                    format: date
+                reason:
+                    type: string
+            required: [startDate, endDate, reason]
+
+        Employee:
+            type: object
+            properties:
+                id:
+                    type: integer
+                username:
+                    type: string
+                role:
+                    type: string
+                    enum: [employee, admin]
+
+paths:
+    /api/employees/createuser:
+        post:
+            tags: [Auth]
+            summary: 創建用戶
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CreateUser"
+            responses:
+                "201":
+                    description: 創建成功
+                "400":
+                    description: 請求錯誤
+
+    /api/employees/login:
+        post:
+            tags: [Auth]
+            summary: 用戶登入
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/LoginRequest"
+            responses:
+                "200":
+                    description: 登入成功
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/JwtResponse"
+                "401":
+                    description: 認證失敗
+
+    /api/employees/getall:
+        get:
+            tags: [Employees]
+            summary: 獲取所有員工
+            security:
+                - bearerAuth: []
+            responses:
+                "200":
+                    description: 員工列表
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Employee"
+                "403":
+                    description: 未授權
+
+    /api/attendance/checkin:
+        post:
+            tags: [Attendance]
+            summary: 上班打卡
+            security:
+                - bearerAuth: []
+            responses:
+                "200":
+                    description: 打卡成功
+
+    /api/attendance/checkout:
+        post:
+            tags: [Attendance]
+            summary: 下班打卡
+            security:
+                - bearerAuth: []
+            responses:
+                "200":
+                    description: 打卡成功
+
+    /api/attendance/getall:
+        get:
+            tags: [Attendance]
+            summary: 獲取所有出勤記錄
+            security:
+                - bearerAuth: []
+            responses:
+                "200":
+                    description: 成功取得
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/AttendanceRecord"
+
+    /api/attendance/create:
+        post:
+            tags: [Attendance]
+            summary: 創建出勤記錄（由管理者使用）
+            security:
+                - bearerAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/AttendanceRecord"
+            responses:
+                "201":
+                    description: 創建成功
+
+    /api/attendance/{id}:
+        get:
+            tags: [Attendance]
+            summary: 查詢特定出勤記錄
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: 查詢成功
+                "404":
+                    description: 找不到資料
+
+        put:
+            tags: [Attendance]
+            summary: 更新出勤記錄
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/AttendanceRecord"
+            responses:
+                "200":
+                    description: 更新成功
+
+        delete:
+            tags: [Attendance]
+            summary: 刪除出勤記錄
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "204":
+                    description: 刪除成功
+
+    /api/leaverequests/getall:
+        get:
+            tags: [LeaveRequests]
+            summary: 獲取所有請假申請
+            security:
+                - bearerAuth: []
+            responses:
+                "200":
+                    description: 成功取得
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/LeaveRequest"
+
+    /api/leaverequests/create:
+        post:
+            tags: [LeaveRequests]
+            summary: 創建請假申請
+            security:
+                - bearerAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/LeaveRequest"
+            responses:
+                "201":
+                    description: 創建成功
+
+    /api/leaverequests/{id}:
+        get:
+            tags: [LeaveRequests]
+            summary: 查詢特定請假申請
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: 查詢成功
+
+        put:
+            tags: [LeaveRequests]
+            summary: 更新請假申請
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/LeaveRequest"
+            responses:
+                "200":
+                    description: 更新成功
+
+        delete:
+            tags: [LeaveRequests]
+            summary: 刪除請假申請
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "204":
+                    description: 刪除成功
