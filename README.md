@@ -137,6 +137,7 @@ create database attendance_system;
 
 Postman 測試檔 AttendanceSystem.postman_collection.json
 SwaggerHub https://app.swaggerhub.com/apis/solove/attendancesystem/1.0.0
+h2 資料庫路由:http://localhost:8080/h2-console
 
 ## 📄 Attendance System API 文件
 
