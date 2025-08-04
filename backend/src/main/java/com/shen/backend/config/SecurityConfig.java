@@ -39,7 +39,8 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/employees/login", "/api/employees/createuser", "/h2-console/**")
+                        .requestMatchers("/api/employees/login", "/api/employees/createuser", "/api/attendance/status",
+                                "/h2-console/**")
                         .permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
