@@ -17,4 +17,4 @@ RUN ./mvnw clean package -DskipTests
 ENV PORT=8080
 
 # 啟動 Spring Boot 應用（建議寫死 .jar 檔名）
-CMD ["java", "-jar", "backend-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "target/backend-0.0.1-SNAPSHOT.jar"]
