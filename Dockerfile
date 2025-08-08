@@ -1,5 +1,5 @@
 # 使用官方 OpenJDK 17 映像
-FROM eclipse-temurin:17-jdk
+FROM eclipse-temurin:21-jdk
 
 # 設定工作目錄
 WORKDIR /app
