@@ -1,20 +1,23 @@
-# 使用官方 OpenJDK 17 映像
+# 使用 Java 21 的 base image
 FROM eclipse-temurin:21-jdk
 
-# 設定工作目錄
+# 切換工作目錄
 WORKDIR /app
 
-# 複製 backend 專案
+# 複製 Maven wrapper 和 backend 專案進容器
 COPY ./backend /app
 
-# Maven wrapper 執行權限
+# 賦予執行權限給 mvnw
 RUN chmod +x mvnw
 
-# 編譯並略過測試
+# 打包 Spring Boot 專案
 RUN ./mvnw clean package -DskipTests
 
-# 設定埠（Railway 會自動提供環境變數 PORT）
+# Debug 用：列出 target 目錄內容，確認 jar 是否存在
+RUN ls -al target
+
+# 設定環境變數
 ENV PORT=8080
 
-# 啟動 Spring Boot 應用（建議寫死 .jar 檔名）
+# 執行 jar 檔（注意路徑！）
 CMD ["java", "-jar", "target/backend-0.0.1-SNAPSHOT.jar"]
