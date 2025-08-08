@@ -1,0 +1,5 @@
+[phases.setup]
+nixPkgs = ["openjdk17", "maven"]
+
+[start]
+cmd = "cd backend && ./mvnw clean install && java -jar target/*.jar"
