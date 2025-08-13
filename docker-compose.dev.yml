@@ -34,7 +34,7 @@ services:
       # 掛載源代碼以便熱重載
       - ./frontend:/app
       - /app/node_modules
-    command: npm run dev -- --host 0.0.0.0
+    command: sh -c "pnpm install && pnpm run dev -- --host 0.0.0.0"
     depends_on:
       - backend-dev
     networks:

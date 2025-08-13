@@ -5,6 +5,8 @@
 - Docker
 - Docker Compose
 
+> **注意**: 此專案前端使用 pnpm 包管理器，Docker 將自動處理相關依賴。
+
 ## 快速開始
 
 ### 生產環境部署
@@ -97,7 +99,24 @@ DB_PORT=5432
 1. **端口衝突**: 如果端口已被占用，請修改 `docker-compose.yml` 中的端口映射
 2. **權限問題**: 在 Linux/Mac 上可能需要使用 `sudo`
 3. **構建失敗**: 檢查 Docker 和 Docker Compose 版本
-4. **資料持久化**: 資料庫資料會保存在 Docker volume 中，刪除 volume 會丟失資料
+4. **前端構建錯誤**: 確保 `frontend/pnpm-lock.yaml` 文件存在
+5. **包管理器問題**: 此專案使用 pnpm，如果遇到依賴問題，請檢查 `package.json` 和 `pnpm-lock.yaml`
+6. **資料持久化**: 資料庫資料會保存在 Docker volume 中，刪除 volume 會丟失資料
+
+### 清理並重新構建
+
+如果遇到構建問題，可以嘗試完全清理並重新構建：
+
+```bash
+# 停止所有容器
+docker-compose down
+
+# 清理所有 Docker 資源
+docker system prune -a
+
+# 重新構建
+docker-compose up --build -d
+```
 
 ## 資料備份
 

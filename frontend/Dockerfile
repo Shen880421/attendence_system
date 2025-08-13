@@ -1,20 +1,23 @@
 # 多階段構建 - 第一階段：構建應用程式
 FROM node:18-alpine AS builder
 
+# 安裝 pnpm
+RUN npm install -g pnpm
+
 # 設定工作目錄
 WORKDIR /app
 
 # 複製 package 文件
-COPY frontend/package*.json ./
+COPY frontend/package.json frontend/pnpm-lock.yaml ./
 
 # 安裝依賴
-RUN npm ci
+RUN pnpm install --frozen-lockfile
 
 # 複製源代碼
 COPY frontend/ ./
 
 # 構建應用程式
-RUN npm run build
+RUN pnpm run build
 
 # 第二階段：運行時環境
 FROM nginx:alpine

@@ -9,6 +9,11 @@
 **/yarn-error.log*
 **/dist
 
+# 除了需要的 lockfile 之外的包管理器文件
+**/package-lock.json
+**/yarn.lock
+# 保留 pnpm-lock.yaml
+
 # IDE
 **/.idea
 **/.vscode

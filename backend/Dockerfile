@@ -19,7 +19,7 @@ RUN ./mvnw dependency:go-offline -B
 # 複製源代碼
 COPY backend/src ./src
 
-# 編譯應用程式
+# 編譯應用程式（跳過測試以加快構建）
 RUN ./mvnw clean package -DskipTests
 
 # 暴露端口
