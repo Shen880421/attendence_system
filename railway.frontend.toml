@@ -1,0 +1,15 @@
+version: 2
+
+environments:
+  production:
+    variables:
+      NODE_ENV: production
+      VITE_API_BASE_URL: "${{VITE_API_BASE_URL}}"
+
+build:
+  commands:
+    - "pnpm install --frozen-lockfile"
+    - "pnpm run build"
+
+deploy:
+  startCommand: "pnpm run preview --host 0.0.0.0 --port $PORT"
