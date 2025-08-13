@@ -1,9 +1,9 @@
-# Backend 配置 (當部署 backend 時使用)
+# 後端配置 - 使用 Java 17 以確保兼容性
 [phases.setup]
-nixPkgs = ["openjdk21", "maven"]
+nixPkgs = ["maven", "openjdk17"]
 
-[phases.build]
+[phases.build] 
 cmds = ["cd backend && chmod +x mvnw && ./mvnw clean package -DskipTests"]
 
 [start]
-cmd = "java -Dserver.port=$PORT -jar backend/target/backend-0.0.1-SNAPSHOT.jar"
+cmd = "java -Dserver.port=$PORT -jar backend/target/backend-0.0.1-SNAPSHOT.jar" 配置 (當部署 backend 時使用)
