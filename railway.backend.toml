@@ -5,6 +5,12 @@ environments:
     variables:
       NODE_ENV: production
       PORT: ${{PORT}}
+      DATABASE_URL: ${{DATABASE_URL}}
+      PGHOST: ${{PGHOST}}
+      PGPORT: ${{PGPORT}}
+      PGDATABASE: ${{PGDATABASE}}
+      PGUSER: ${{PGUSER}}
+      PGPASSWORD: ${{PGPASSWORD}}
       
 build:
   commands:
@@ -12,7 +18,7 @@ build:
   
 deploy:
   startCommand: "java -jar target/backend-0.0.1-SNAPSHOT.jar"
-  healthcheckPath: "/actuator/health"
+  healthcheckPath: "/health"
   
 services:
   backend:
