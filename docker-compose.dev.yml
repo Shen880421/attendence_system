@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  # 後端開發服務
+  backend-dev:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: attendance_backend_dev
+    ports:
+      - "8080:8080"
+    environment:
+      # 開發環境使用 H2 資料庫
+      - SPRING_PROFILES_ACTIVE=dev
+      - PORT=8080
+    volumes:
+      # 掛載源代碼以便熱重載
+      - ./backend/src:/app/src
+      - ./backend/target:/app/target
+    networks:
+      - attendance_network_dev
+    restart: unless-stopped
+
+  # 前端開發服務
+  frontend-dev:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      target: builder
+    container_name: attendance_frontend_dev
+    ports:
+      - "5173:5173"
+    volumes:
+      # 掛載源代碼以便熱重載
+      - ./frontend:/app
+      - /app/node_modules
+    command: sh -c "pnpm install && pnpm run dev -- --host 0.0.0.0"
+    depends_on:
+      - backend-dev
+    networks:
+      - attendance_network_dev
+    restart: unless-stopped
+
+networks:
+  attendance_network_dev:
+    driver: bridge

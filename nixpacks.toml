@@ -1,5 +1,9 @@
+# Backend 配置 (當部署 backend 時使用)
 [phases.setup]
-nixPkgs = ["openjdk17", "maven"]
+nixPkgs = ["openjdk21", "maven"]
+
+[phases.build]
+cmds = ["cd backend && chmod +x mvnw && ./mvnw clean package -DskipTests"]
 
 [start]
-cmd = "cd backend && ./mvnw clean install && java -jar target/*.jar"
+cmd = "java -Dserver.port=$PORT -jar backend/target/backend-0.0.1-SNAPSHOT.jar"
