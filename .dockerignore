@@ -1,4 +1,37 @@
+# Maven
 **/target
-**/.idea
-**/.git
+**/.m2
+
+# Node.js
 **/node_modules
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/dist
+
+# IDE
+**/.idea
+**/.vscode
+**/*.swp
+**/*.swo
+
+# Git
+**/.git
+**/.gitignore
+
+# 系統文件
+.DS_Store
+Thumbs.db
+
+# 日誌文件
+**/*.log
+
+# 環境變數文件
+**/.env
+**/.env.local
+**/.env.production
+
+# 其他
+**/README.md
+**/docker-compose*.yml
+**/Dockerfile*
