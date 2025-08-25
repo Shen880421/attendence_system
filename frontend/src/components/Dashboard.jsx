@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../store/hooks";
 import { attendanceAPI } from "../services/api";
 import AdminDashboard from "./AdminDashboard";
 import {
@@ -33,6 +33,14 @@ const Dashboard = () => {
         return () => clearInterval(timer);
     }, []);
 
+    // 載入打卡記錄
+    useEffect(() => {
+        loadAttendanceData();
+    }, []);
+    // 如果是管理員，顯示管理面板
+    if (user?.role === "ADMIN") {
+        return <AdminDashboard />;
+    }
     const loadAttendanceData = async () => {
         try {
             const recordsData = await attendanceAPI.getAllRecords();
@@ -82,14 +90,7 @@ const Dashboard = () => {
             });
         }
     };
-    // 載入打卡記錄
-    useEffect(() => {
-        loadAttendanceData();
-    }, []);
-    // 如果是管理員，顯示管理面板
-    if (user?.role === "ADMIN") {
-        return <AdminDashboard />;
-    }
+
     const showMessage = (msg, type) => {
         setMessage(msg);
         setMessageType(type);
