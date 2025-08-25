@@ -24,23 +24,12 @@ const Dashboard = () => {
         todayRecords: [],
     });
 
-    // 更新當前時間
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentTime(new Date());
-        }, 1000);
-
-        return () => clearInterval(timer);
-    }, []);
-
-    // 載入打卡記錄
-    useEffect(() => {
-        loadAttendanceData();
-    }, []);
     // 如果是管理員，顯示管理面板
     if (user?.role === "ADMIN") {
         return <AdminDashboard />;
     }
+
+    // 載入打卡記錄函數
     const loadAttendanceData = async () => {
         try {
             const recordsData = await attendanceAPI.getAllRecords();
@@ -90,6 +79,22 @@ const Dashboard = () => {
             });
         }
     };
+
+    // 更新當前時間
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, []);
+
+    // 載入打卡記錄
+    useEffect(() => {
+        if (user?.id) {
+            loadAttendanceData();
+        }
+    }, [user?.id]);
 
     const showMessage = (msg, type) => {
         setMessage(msg);
