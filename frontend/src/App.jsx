@@ -5,7 +5,8 @@ import {
     Route,
     Navigate,
 } from "react-router-dom";
-import { useAuth } from "./store/hooks";
+import { useDispatch } from "react-redux";
+import { initAuth } from "./store/authSlice";
 import ProtectedRoute, { PublicRoute } from "./components/ProtectedRoute";
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -13,12 +14,12 @@ import Dashboard from "./components/Dashboard";
 import "./style.css";
 
 function App() {
-    const { initialize } = useAuth();
+    const dispatch = useDispatch();
 
-    // 初始化認證狀態
+    // 初始化認證狀態（只在組件掛載時執行一次）
     useEffect(() => {
-        initialize();
-    }, [initialize]);
+        dispatch(initAuth());
+    }, [dispatch]);
 
     return (
         <Router>

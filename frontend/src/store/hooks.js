@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     setAuth,
@@ -22,29 +23,38 @@ export const useAuth = () => {
     const loading = useSelector(selectAuthLoading);
 
     // 登入函數
-    const login = (tokenData, userData) => {
-        dispatch(setAuth({ user: userData, token: tokenData }));
-    };
+    const login = useCallback(
+        (tokenData, userData) => {
+            dispatch(setAuth({ user: userData, token: tokenData }));
+        },
+        [dispatch]
+    );
 
     // 登出函數
-    const logout = () => {
+    const logout = useCallback(() => {
         dispatch(clearAuth());
-    };
+    }, [dispatch]);
 
     // 初始化認證狀態
-    const initialize = () => {
+    const initialize = useCallback(() => {
         dispatch(initAuth());
-    };
+    }, [dispatch]);
 
     // 設置載入狀態
-    const setAuthLoading = (loadingState) => {
-        dispatch(setLoading(loadingState));
-    };
+    const setAuthLoading = useCallback(
+        (loadingState) => {
+            dispatch(setLoading(loadingState));
+        },
+        [dispatch]
+    );
 
     // 更新使用者資訊
-    const updateUserInfo = (userData) => {
-        dispatch(updateUser(userData));
-    };
+    const updateUserInfo = useCallback(
+        (userData) => {
+            dispatch(updateUser(userData));
+        },
+        [dispatch]
+    );
 
     return {
         // 狀態
